@@ -3,6 +3,8 @@ var _ = require('underscore');
 var L = require('leaflet');
 require('leaflet-providers');
 
+var Miso = require('miso.dataset');
+
 var icon = L.divIcon({className: 'leaflet-div-icon'})
 var selectedIcon = L.divIcon({className: 'leaflet-div-icon selected'});
 
@@ -12,29 +14,33 @@ map.setView([35.045556, -85.267222], 11);
 
 L.tileLayer.provider('MapBox.jeremiak.jn9nfl41').addTo(map);
 
-var homeData = require('./data/homes.json');
+var sourceData;
 var layerGroups = {}, listingGroups = {}, currentLayer, selectedListing, selectedMarker;
 
 function filterData(data) {
   var bedroomQuery = $('#bedrooms').val(), bathroomQuery = $('#bathrooms').val(), homes;
   var groupName = bedroomQuery + ':' + bathroomQuery;
 
+  console.log('bedroomQuery', bedroomQuery)
+  console.log('bathroomQuery', bathroomQuery);
+
   if (bedroomQuery == 'Any' && bathroomQuery == 'Any') {
     homes = data;
   }
   else if (bedroomQuery != 'Any' && bathroomQuery == 'Any') {
+    console.log('data', data);
     homes = _.filter(data, function(house){
-      return house.bed == parseInt(bedroomQuery);
+      return house.BED == parseInt(bedroomQuery);
     });
   }
   else if (bedroomQuery == 'Any' && bathroomQuery != 'Any') {
     homes = _.filter(data, function(house){
-      return house.bath == parseInt(bathroomQuery);
+      return house.BATH == parseInt(bathroomQuery);
     });
   }
   else if (bedroomQuery != 'Any' && bathroomQuery != 'Any') {
     homes = _.filter(data, function(house){
-      return (house.bed == parseInt(bedroomQuery) && house.bath == parseInt(bathroomQuery));
+      return (house.BED == parseInt(bedroomQuery) && house.BATH == parseInt(bathroomQuery));
     });
   }
 
@@ -60,8 +66,9 @@ function filterData(data) {
 }
 
 function processHomes(json, layerGroup, listingGroup) {
-  var marker = createMarker(json.name, json.lat, json.lng);
-  var listing = createListingHtml(json.name, json.bed, json.bath);
+  var home = json;
+  var marker = createMarker(json.ADDRESS, json.LAT, json.LNG);
+  var listing = createListingHtml(home);
 
   marker.listing = listing;
   listing[0].marker = marker;
@@ -78,10 +85,12 @@ function createMarker(name, lat, lng) {
   return marker
 }
 
-function createListingHtml(name, bed, bath) {
-  var html = 'Property name: ' + name;
-  html += '<br />Beds: ' + bed;
-  html += '<br />Baths: ' + bath;
+function createListingHtml(home) {
+  var html = 'Property name: ' + home.ADDRESS;
+  html += '<br />Beds: ' + home.BED;
+  html += '<br />Baths: ' + home.BATH;
+  html += '<br />Rent: ' + home.RENT;
+  html += '<br />Security Deposit: ' + home['SEC DEP'];
 
   return $('<div class="listing">' + html + '</div>');
 }
@@ -107,17 +116,33 @@ function selectMarkerFromListing(e) {
 
 $(document).ready(function() {
   $('#bedrooms').on('change', function(e){
-    filterData(homeData);
+    filterData(sourceData);
   });
 
   $('#bathrooms').on('change', function(e) {
-    filterData(homeData);
-  })
+    filterData(sourceData);
+  });
 
-  filterData(homeData);
+  var ds = new Miso.Dataset({
+    key : "10daWmhJnvckLq0v8HE5LsAlEotgG34H_9JQR0TLkPuo",
+    worksheet: "1",
+    importer: Miso.Dataset.Importers.GoogleSpreadsheet,
+    parser : Miso.Dataset.Parsers.GoogleSpreadsheet
+  });
+
+  ds.fetch({
+    success: function() {
+      sourceData = ds.toJSON();
+      filterData(sourceData);
+    },
+    error: function(e) {
+      console.log('failed');
+    }
+  });
+
 });
 
 window.$ = $;
+window._ = _;
 window.map = map;
-window.filterData = filterData;
-window.homeData = homeData;
+window.filterData = filterData
