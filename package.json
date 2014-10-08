@@ -1,0 +1,20 @@
+{
+  "name": "hcvp-list",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "beefy app.js:bundle.js --live",
+    "bundle": "browserify app.js -o bundle.js"
+  },
+  "author": "jeremiak",
+  "license": "ISC",
+  "dependencies": {
+    "leaflet": "^0.7.3"
+  },
+  "devDependencies": {
+    "browserify": "^6.0.3",
+    "beefy": "^2.1.1"
+  }
+}
