@@ -126,32 +126,32 @@ window.homeData = homeData;
 },{"./data/homes.json":2,"jquery":3,"leaflet":5,"leaflet-providers":4,"underscore":6}],2:[function(require,module,exports){
 module.exports=[
   {
-    'name': 'Marker 1',
-    'bed': 1,
-    'bath': 1,
-    'lat': 35.08174,
-    'lng': -85.30251
+    "name": "Marker 1",
+    "bed": 1,
+    "bath": 1,
+    "lat": 35.08174,
+    "lng": -85.30251
   },
   {
-    'name': 'Marker 2',
-    'bed': 2,
-    'bath': 1,
-    'lat': 35.02385,
-    'lng': -85.28191
+    "name": "Marker 2",
+    "bed": 2,
+    "bath": 1,
+    "lat": 35.02385,
+    "lng": -85.28191
   },
   {
-    'name': 'Marker 3',
-    'bed': 2,
-    'bath': 2,
-    'lat': 35.01204,
-    'lng': -85.3183
+    "name": "Marker 3",
+    "bed": 2,
+    "bath": 2,
+    "lat": 35.01204,
+    "lng": -85.3183
   },
   {
-    'name': 'Marker 4',
-    'bed': 3,
-    'bath': 2,
-    'lat': 35.02,
-    'lng': -85.33
+    "name": "Marker 4",
+    "bed": 3,
+    "bath": 2,
+    "lat": 35.02,
+    "lng": -85.33
   }
 ]
 
