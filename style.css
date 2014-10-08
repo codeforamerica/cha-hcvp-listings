@@ -1,0 +1,38 @@
+body {
+  text-align:center;
+}
+.col {
+  border:1px solid black;
+  float:left;
+  min-height:500px;
+  margin-left:5%;
+  width:45%;
+}
+#listings div {
+  border-bottom:1px solid green;
+  cursor:pointer;
+  display: -webkit-box;
+  -webkit-box-align: center;
+
+  display: -moz-box;
+  -moz-box-align: center;
+
+  display: -ms-flexbox;
+  -ms-flex-align: center;
+
+  display: box;
+  box-align: center;
+  min-height:50px;
+  padding:20px;
+}
+#listings .selected {
+  color:red;
+}
+#map {
+  height:400px;
+  margin:0 auto;
+}
+.leaflet-div-icon {}
+.leaflet-div-icon.selected {
+  background-color:red;
+}

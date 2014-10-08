@@ -3,20 +3,30 @@
   <head>
     <title>HCVP Listings</title>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-    <style>
-      body {
-        text-align:center;
-      }
-      #map {
-        height:400px;
-        margin:0 auto;
-        width:800px;
-      }
-    </style>
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <h1>HCVP Listings in Chattanooga, TN</h1>
-    <div id="map"></div>
+    <div>
+      <label for="bedrooms"># of bedrooms</label>
+      <select name="bedrooms" id="bedrooms">
+        <option>Any</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+      <label for="bathrooms"># of bathrooms</label>
+      <select name="bathrooms" id="bathrooms">
+        <option>Any</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+      </select>
+    </div>
+    <div class="col" id="listings"></div>
+    <div class="col" id="map"></div>
     <script src="./bundle.js"></script>
   </body>
 </html>

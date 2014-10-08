@@ -11,7 +11,10 @@
   "author": "jeremiak",
   "license": "ISC",
   "dependencies": {
-    "leaflet": "^0.7.3"
+    "leaflet": "^0.7.3",
+    "leaflet-providers": "^1.0.10",
+    "jquery": "^2.1.1",
+    "underscore": "^1.7.0"
   },
   "devDependencies": {
     "browserify": "^6.0.3",

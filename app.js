@@ -1,15 +1,125 @@
+var $ = require('jquery');
+var _ = require('underscore');
 var L = require('leaflet');
-L.Icon.Default.imagePath = 'node_modules/leaflet/dist/images/';
+require('leaflet-providers');
 
+var icon = L.divIcon({className: 'leaflet-div-icon'})
+var selectedIcon = L.divIcon({className: 'leaflet-div-icon selected'});
+
+var listings = $('#listings');
 var map = L.map('map');
-map.setView([47.63, -122.32], 11);
+map.setView([35.045556, -85.267222], 11);
 
-var attribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>';
-var tiles = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png';
+L.tileLayer.provider('MapBox.jeremiak.jn9nfl41').addTo(map);
 
-var layer = L.tileLayer(tiles, {
-  maxZoom: 18,
-  attribution: attribution
+var homeData = require('./data/homes.json');
+var layerGroups = {}, currentLayer, selectedListing, selectedMarker;
+
+function filterData(data) {
+  var bedroomQuery = $('#bedrooms').val(), bathroomQuery = $('#bathrooms').val(), homes;
+  var groupName = bedroomQuery + ':' + bathroomQuery;
+
+  if (bedroomQuery == 'Any' && bathroomQuery == 'Any') {
+    homes = data;
+  }
+  else if (bedroomQuery != 'Any' && bathroomQuery == 'Any') {
+    homes = _.filter(data, function(house){
+      return house.bed == parseInt(bedroomQuery);
+    });
+  }
+  else if (bedroomQuery == 'Any' && bathroomQuery != 'Any') {
+    homes = _.filter(data, function(house){
+      return house.bath == parseInt(bathroomQuery);
+    });
+  }
+  else if (bedroomQuery != 'Any' && bathroomQuery != 'Any') {
+    homes = _.filter(data, function(house){
+      return (house.bed == parseInt(bedroomQuery) && house.bath == parseInt(bathroomQuery));
+    });
+  }
+
+  if (currentLayer) {
+    map.removeLayer(currentLayer);
+    listings.empty();
+  }
+
+  if (!layerGroups.hasOwnProperty(groupName)) {
+    layerGroups[groupName] = L.layerGroup();
+
+    for (var i=0; i<homes.length; i++) {
+      processHomes(homes[i], layerGroups[groupName])
+    }
+  }
+
+  currentLayer = layerGroups[groupName];
+  layerGroups[groupName].addTo(map);
+
+  console.log('groupname', groupName);
+  console.log('currentLayer', currentLayer);
+  console.log('lGroups', layerGroups);
+  console.log('\n');
+}
+
+function processHomes(json, layerGroup) {
+  var marker = createMarker(json.name, json.lat, json.lng);
+  var listing = createListingHtml(json.name, json.bed, json.bath);
+
+  marker.listing = listing;
+  listing[0].marker = marker;
+
+  marker.on('click', selectListingFromMarker);
+  listing.on('click', selectMarkerFromListing);
+
+  listings.append(listing);
+  layerGroup.addLayer(marker);
+}
+
+function createMarker(name, lat, lng) {
+  var marker = L.marker([lat, lng], {icon: icon});
+  return marker
+}
+
+function createListingHtml(name, bed, bath) {
+  var html = 'Property name: ' + name;
+  html += '<br />Beds: ' + bed;
+  html += '<br />Baths: ' + bath;
+
+  return $('<div class="listing">' + html + '</div>');
+}
+
+function handleCurrentlySelected(listing, marker) {
+  if (selectedListing) { $(selectedListing).removeClass('selected'); }
+  if (selectedMarker) { selectedMarker.setIcon(icon); }
+  selectedListing = listing;
+  selectedMarker = marker;
+  $(listing).addClass('selected');
+  marker.setIcon(selectedIcon);
+}
+
+function selectListingFromMarker(e) {
+  var listing = e.target.listing;
+  handleCurrentlySelected(listing, e.target);
+}
+
+function selectMarkerFromListing(e) {
+  var marker = e.target.marker;
+  handleCurrentlySelected(e.target, marker);
+}
+
+$(document).ready(function() {
+  $('#bedrooms').on('change', function(e){
+    filterData(homeData);
+  });
+
+  $('#bathrooms').on('change', function(e) {
+    filterData(homeData);
+  })
+
+  filterData(homeData );
 });
 
-layer.addTo(map);
+window.$ = $;
+window.map = map;
+window.filterData = filterData;
+window.homeData = homeData;
+window.lg = layerGroups;
