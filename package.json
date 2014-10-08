@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "browserify": "^6.0.3",
-    "beefy": "^2.1.1"
+    "beefy": "^2.1.1",
+    "brfs": "^1.2.0"
   }
 }
