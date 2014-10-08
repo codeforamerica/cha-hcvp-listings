@@ -1,12 +1,12 @@
 {
   "name": "hcvp-list",
   "version": "0.0.0",
-  "description": "",
+  "description": "Display HCVP homes for Chattanooga",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "beefy app.js:bundle.js --live",
-    "bundle": "browserify app.js -o bundle.js"
+    "bundle": "browserify -t brfs app.js > bundle.js"
   },
   "author": "jeremiak",
   "license": "ISC",
@@ -14,7 +14,8 @@
     "leaflet": "^0.7.3",
     "leaflet-providers": "^1.0.10",
     "jquery": "^2.1.1",
-    "underscore": "^1.7.0"
+    "underscore": "^1.7.0",
+    "miso.dataset": "^0.4.1"
   },
   "devDependencies": {
     "browserify": "^6.0.3",
