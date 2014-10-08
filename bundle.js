@@ -14,7 +14,7 @@ map.setView([35.045556, -85.267222], 11);
 L.tileLayer.provider('MapBox.jeremiak.jn9nfl41').addTo(map);
 
 var homeData = require('./data/homes.json');
-var layerGroups = {}, currentLayer, selectedListing, selectedMarker;
+var layerGroups = {}, listingGroups = {}, currentLayer, selectedListing, selectedMarker;
 
 function filterData(data) {
   var bedroomQuery = $('#bedrooms').val(), bathroomQuery = $('#bathrooms').val(), homes;
@@ -46,22 +46,21 @@ function filterData(data) {
 
   if (!layerGroups.hasOwnProperty(groupName)) {
     layerGroups[groupName] = L.layerGroup();
+    listingGroups[groupName] = [];
 
     for (var i=0; i<homes.length; i++) {
-      processHomes(homes[i], layerGroups[groupName])
+      processHomes(homes[i], layerGroups[groupName], listingGroups[groupName])
     }
   }
 
   currentLayer = layerGroups[groupName];
   layerGroups[groupName].addTo(map);
-
-  console.log('groupname', groupName);
-  console.log('currentLayer', currentLayer);
-  console.log('lGroups', layerGroups);
-  console.log('\n');
+  listingGroups[groupName].forEach(function(listing){
+    $(listings).append(listing);
+  });
 }
 
-function processHomes(json, layerGroup) {
+function processHomes(json, layerGroup, listingGroup) {
   var marker = createMarker(json.name, json.lat, json.lng);
   var listing = createListingHtml(json.name, json.bed, json.bath);
 
@@ -71,7 +70,7 @@ function processHomes(json, layerGroup) {
   marker.on('click', selectListingFromMarker);
   listing.on('click', selectMarkerFromListing);
 
-  listings.append(listing);
+  listingGroup.push(listing);
   layerGroup.addLayer(marker);
 }
 
@@ -116,14 +115,13 @@ $(document).ready(function() {
     filterData(homeData);
   })
 
-  filterData(homeData );
+  filterData(homeData);
 });
 
 window.$ = $;
 window.map = map;
 window.filterData = filterData;
 window.homeData = homeData;
-window.lg = layerGroups;
 
 },{"./data/homes.json":2,"jquery":3,"leaflet":5,"leaflet-providers":4,"underscore":6}],2:[function(require,module,exports){
 module.exports=[
