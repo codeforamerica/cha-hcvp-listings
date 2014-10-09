@@ -2,7 +2,7 @@
 
 This displays the Housing Choice Voucher Program (Section 8) apartments that the Chattanooga Housing Authority knows about.
 
-The data source is [this Google spreadsheet](https://codeforamerica.github.io/cha-hcvp-listings) which can be updated by CHA employees.
+The data source is [this Google spreadsheet](https://docs.google.com/a/codeforamerica.org/spreadsheets/d/10daWmhJnvckLq0v8HE5LsAlEotgG34H_9JQR0TLkPuo) which can be updated by CHA employees.
 
 ## Installation
 
