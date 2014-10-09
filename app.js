@@ -14,8 +14,12 @@ map.setView([35.045556, -85.267222], 11);
 
 L.tileLayer.provider('MapBox.jeremiak.jn9nfl41').addTo(map);
 
-var sourceData;
-var layerGroups = {}, listingGroups = {}, currentLayer, selectedListing, selectedMarker;
+var sourceData,
+    layerGroups = {},
+    listingGroups = {},
+    currentLayer,
+    selectedListing,
+    selectedMarker;
 
 function filterData(data) {
   var bedroomQuery = $('#bedrooms').val(), bathroomQuery = $('#bathrooms').val(), homes;
