@@ -14,21 +14,21 @@ map.setView([35.045556, -85.267222], 11);
 
 L.tileLayer.provider('MapBox.jeremiak.jn9nfl41').addTo(map);
 
-var sourceData;
-var layerGroups = {}, listingGroups = {}, currentLayer, selectedListing, selectedMarker;
+var sourceData,
+    layerGroups = {},
+    listingGroups = {},
+    currentLayer,
+    selectedListing,
+    selectedMarker;
 
 function filterData(data) {
   var bedroomQuery = $('#bedrooms').val(), bathroomQuery = $('#bathrooms').val(), homes;
   var groupName = bedroomQuery + ':' + bathroomQuery;
 
-  console.log('bedroomQuery', bedroomQuery)
-  console.log('bathroomQuery', bathroomQuery);
-
   if (bedroomQuery == 'Any' && bathroomQuery == 'Any') {
     homes = data;
   }
   else if (bedroomQuery != 'Any' && bathroomQuery == 'Any') {
-    console.log('data', data);
     homes = _.filter(data, function(house){
       return house.BED == parseInt(bedroomQuery);
     });
@@ -132,7 +132,9 @@ $(document).ready(function() {
 
   ds.fetch({
     success: function() {
-      sourceData = ds.toJSON();
+      sourceData = _.filter(ds.toJSON(), function(d) {
+        return d.AVAILABLE != 'NO';
+      });
       filterData(sourceData);
     },
     error: function(e) {
